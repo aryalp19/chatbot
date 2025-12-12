@@ -292,9 +292,30 @@ def load_catalog_data(file_path="store_yamaha.txt"):
 def initialize_gemini():
     """Initialize Gemini AI model with system prompt"""
     
-    # Get API key
-    API_KEY = "AIzaSyBUevfy5BuCm2hNcA0e5yj0j5ZCm0rmeTY"
+    # CARA 1: Ambil API key dari Streamlit Secrets (RECOMMENDED)
+    try:
+        API_KEY = st.secrets["GEMINI_API_KEY"]
+    except:
+        # CARA 2: Ambil dari environment variable (alternatif)
+        API_KEY = os.getenv("GEMINI_API_KEY")
+        
+        # CARA 3: Input manual dari sidebar (untuk testing)
+        if not API_KEY:
+            with st.sidebar:
+                st.warning("⚠️ API Key tidak ditemukan!")
+                API_KEY = st.text_input(
+                    "Masukkan Gemini API Key:",
+                    type="password",
+                    help="API key akan disimpan sementara di session"
+                )
+                if not API_KEY:
+                    st.error("Silakan masukkan API Key untuk melanjutkan")
+                    st.stop()
+    
     genai.configure(api_key=API_KEY)
+    
+    # Load catalog data
+    catalog_info = load_catalog_data("store_yamaha.txt")
     
     # Load catalog data
     catalog_info = load_catalog_data("store_yamaha.txt")

@@ -1,0 +1,17 @@
+# API Keys & Secrets - JANGAN UPLOAD!
+.streamlit/secrets.toml
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Streamlit cache
+.streamlit/
