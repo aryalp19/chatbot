@@ -453,11 +453,15 @@ def get_bot_response(model, user_message, chat_history):
         formatted_history = []
 
         for msg in chat_history[-10:]:
+            # 🔴 Gemini hanya menerima "user" dan "model"
+            role = "model" if msg["role"] == "bot" else "user"
+
             formatted_history.append({
-                "role": msg["role"],
+                "role": role,
                 "parts": [{"text": msg["text"]}]
             })
 
+        # Tambahkan pesan user terbaru
         formatted_history.append({
             "role": "user",
             "parts": [{"text": user_message}]
@@ -465,15 +469,16 @@ def get_bot_response(model, user_message, chat_history):
 
         response = model.generate_content(formatted_history)
 
-        # ✅ AMAN: ambil text dengan benar
+        # Ambil teks jawaban dengan aman
         if response.candidates and len(response.candidates) > 0:
             return response.candidates[0].content.parts[0].text.strip()
         else:
-            return "Maaf, saya belum bisa menjawab pertanyaan itu."
+            return "Maaf ya, aku belum bisa jawab pertanyaan itu 🙏"
 
     except Exception as e:
-        print("ERROR GEMINI:", e)  # <-- WAJIB untuk debugging
+        print("🔥 ERROR GEMINI:", e)
         return "Waduh, ada error nih 😅\nCoba lagi ya, atau langsung hubungi dealer kami aja!"
+
 
 
 
